@@ -7,5 +7,6 @@ import { FirstComponent } from './first/first.component';
   declarations: [
     FirstComponent
   ],
+  exports: [FirstComponent]
 })
 export class FirstModule {}

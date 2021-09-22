@@ -31,6 +31,13 @@
     "first": {
       "tags": []
     },
+    "ng-csr-poc": {
+      "tags": []
+    },
+    "ng-csr-poc-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ng-csr-poc"]
+    },
     "ng-ssr-poc": {
       "tags": []
     },
