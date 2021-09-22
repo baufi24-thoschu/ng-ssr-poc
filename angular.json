@@ -1,6 +1,31 @@
 {
   "version": 1,
   "projects": {
+    "first": {
+      "projectType": "library",
+      "root": "libs/first",
+      "sourceRoot": "libs/first/src",
+      "prefix": "ng-ssr-poc",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/first"],
+          "options": {
+            "jestConfig": "libs/first/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/first/src/**/*.ts",
+              "libs/first/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ng-ssr-poc": {
       "projectType": "application",
       "root": "apps/ng-ssr-poc",
@@ -11,7 +36,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/ng-ssr-poc",
+            "outputPath": "dist/ng-ssr-poc/browser",
             "index": "apps/ng-ssr-poc/src/index.html",
             "main": "apps/ng-ssr-poc/src/main.ts",
             "polyfills": "apps/ng-ssr-poc/src/polyfills.ts",
@@ -91,6 +116,63 @@
             "jestConfig": "apps/ng-ssr-poc/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/ng-ssr-poc/server",
+            "main": "apps/ng-ssr-poc/server.ts",
+            "tsConfig": "apps/ng-ssr-poc/tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "apps/ng-ssr-poc/src/environments/environment.ts",
+                  "with": "apps/ng-ssr-poc/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "ng-ssr-poc:build:development",
+              "serverTarget": "ng-ssr-poc:server:development"
+            },
+            "production": {
+              "browserTarget": "ng-ssr-poc:build:production",
+              "serverTarget": "ng-ssr-poc:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": ["/"]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ng-ssr-poc:build:production",
+              "serverTarget": "ng-ssr-poc:server:production"
+            },
+            "development": {
+              "browserTarget": "ng-ssr-poc:build:development",
+              "serverTarget": "ng-ssr-poc:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     },
