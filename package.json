@@ -13,6 +13,7 @@
     "serve:ssr": "node dist/ng-ssr-poc/server/main.js",
     "build:ssr": "ng build && ng run ng-ssr-poc:server",
     "prerender": "ng run ng-ssr-poc:prerender",
+    "clean:node_modules": "rimraf node_modules",
     "clean:dist": "rimraf dist"
   },
   "private": true,
